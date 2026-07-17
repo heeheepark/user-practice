@@ -6,7 +6,6 @@ import org.example.userpractice.entity.User;
 import org.example.userpractice.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +21,7 @@ public class UserService {
     public UserCreateResponse save(UserCreateRequest request) {
         User user = new User(request.getName(), request.getEmail(), request.getAddress());
         User saveUser = userRepository.save(user);
-        return new UserCreateResponse(saveUser.getId(), saveUser.getName(), saveUser.getEmail(), saveUser.getAddress());
+        return new UserCreateResponse(saveUser.getId(), saveUser.getName(), saveUser.getEmail(), saveUser.getAddress(), saveUser.getCreatedAt(), saveUser.getModifiedAt());
     }
 
     @Transactional(readOnly = true)
@@ -31,7 +30,7 @@ public class UserService {
         List<UserGetResponse> dtos = new ArrayList<>();
 
         for (User user : users) {
-            dtos.add(new UserGetResponse(user.getId(), user.getName(), user.getEmail(), user.getAddress()));
+            dtos.add(new UserGetResponse(user.getId(), user.getName(), user.getEmail(), user.getAddress(), user.getCreatedAt(), user.getModifiedAt()));
         }
 
         return dtos;
@@ -43,7 +42,7 @@ public class UserService {
                 () -> new IllegalArgumentException("해당 유저가 없습니다.")
         );
 
-        return new UserGetResponse(user.getId(), user.getName(), user.getEmail(), user.getAddress());
+        return new UserGetResponse(user.getId(), user.getName(), user.getEmail(), user.getAddress(), user.getCreatedAt(), user.getModifiedAt());
     }
 
     @Transactional
@@ -54,7 +53,7 @@ public class UserService {
 
         user.updateUser(request.getName(), request.getEmail(), request.getAddress());
 
-        return new UserUpdateResponse(user.getId(), user.getName(), user.getEmail(), user.getAddress());
+        return new UserUpdateResponse(user.getId(), user.getName(), user.getEmail(), user.getAddress(), user.getCreatedAt(), user.getModifiedAt());
     }
 
     @Transactional
